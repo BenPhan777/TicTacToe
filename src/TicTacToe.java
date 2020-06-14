@@ -7,34 +7,55 @@ import java.util.Scanner;
 ******************************************************************************/
 
 public class TicTacToe {
-    private int size;  // the size of the square board.
-    private String[][] userInput;   // a 2-dimensional array containing positions of X and O.
+    /***************************************************************************************************************
+     *   toArray(String input)
+     *   Purpose: Take a given string input and return a 2-dimensional array filled with the content of that string.
+     *   Pre-conditions:
+     *       @param input: A string representing user's moves.
+     *       @param size: the size of the board game.
+     *   Post-conditions: None.
+     *   Return: A 2-dimensional array containing positions of X, O or underscore.
+     ***************************************************************************************************************/
+    public char[][] toArray(String input, int size) {
+        char [][] returnArray = new char[size][size];
+
+        // Go through each column and row of the array,
+        // and insert the character at index charIdx of the input string to the array.
+        int charIdx = 0;
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                returnArray[row][column] = input.charAt(charIdx);
+                charIdx++;
+            }
+        }
+        return returnArray;
+    }
 
     /****************************************************************************************************
-     *   drawBoard()
-     *   Purpose: display a tic tac toe game to the console.
+     *   drawBoard(char[][] movesArray) {
+     *   Purpose: Display a tic tac toe game to the console.
      *   Pre-conditions:
-     *       @param movesArray: a 2-dimensional array containing positions of X and O.
-     *   Post-conditions: display a tic tac toe game to the console.
+     *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
+     *   Post-conditions: Display a tic tac toe game to the console.
      *   Return: None.
      *****************************************************************************************************/
-    public void drawBoard(String[][] movesArray) {
-        System.out.println("-".repeat(movesArray.length * 2 + 3)); // display the top border of the game board.
+    public void drawBoard(char[][] movesArray) {
+        System.out.println("-".repeat(movesArray.length * 2 + 3)); // Display the top border of the game board.
 
         // Going through each row and column of movesArray to display players' moves.
-        for (String[] row : movesArray) {
+        for (char[] row : movesArray) {
             System.out.print("| ");
-            for (String move: row) {
-                if ("_".equals(move)) {   // leave a blank space if neither players had made their moves here.
+            for (char move: row) {
+                if (move == '_') {   // Leave a blank space if neither players had made their moves here.
                     System.out.print("  ");
-                } else {   // display the player's move if there is one.
+                } else {   // Display the player's move if there is one.
                     System.out.print(move + " ");
                 }
             }
             System.out.print("|\n");
         }
 
-        System.out.println("-".repeat(movesArray.length * 2 + 3)); // display the bottom border of the game board.
+        System.out.println("-".repeat(movesArray.length * 2 + 3)); // Display the bottom border of the game board.
     }
 
     /****************************************************************************************************
@@ -46,16 +67,16 @@ public class TicTacToe {
     *   Return: None.
     *****************************************************************************************************/
     public static void main(String[] args) {
-        // Ask for the user's input
-        System.out.print("Enter cells: ");
+        // Ask for the user's input.
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.next();    // the string to extract the moves from
+        System.out.print("Enter the size of the board game here: ");
+        int boardSize = scanner.nextInt();
+        System.out.print("Enter your move here: ");
+        String userInput = scanner.next();    // The input needed to draw the game board.
+        scanner.close();
 
-        // Display the game board along with the moves obtained from the user's input
-        System.out.println("---------");
-        System.out.println("| " + input.charAt(0) + " " + input.charAt(1) + " " + input.charAt(2) + " |");
-        System.out.println("| " + input.charAt(3) + " " + input.charAt(4) + " " + input.charAt(5) + " |");
-        System.out.println("| " + input.charAt(6) + " " + input.charAt(7) + " " + input.charAt(8) + " |");
-        System.out.println("---------");
+        // Display the tictactoe game.
+        TicTacToe game = new TicTacToe();
+        game.drawBoard(game.toArray(userInput, boardSize));
     }
 }
