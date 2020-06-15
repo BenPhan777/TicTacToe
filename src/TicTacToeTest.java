@@ -50,7 +50,7 @@ class TicTacToeTest {
                                              "Test with an unfinished game.");
         moves = new char[][]{{'X', 'X', 'X'}, {'O', 'O', 'O'}, {'_', 'X', 'O'}};
         assertEquals("This is impossible!" , test.getResult(moves),
-                                             "Test with an impossible game (both players win).");
+                                             "Test with an impossible game (both players win horizontally).");
         moves = new char[][]{{'X', 'X', 'X'}, {'O', 'X', 'O'}, {'_', 'X', 'O'}};
         assertEquals("This is impossible!" , test.getResult(moves),
                                              "Test with an impossible game (too many X).");
@@ -62,11 +62,35 @@ class TicTacToeTest {
         moves = new char[][]{{'X', 'O', 'X', 'X'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'O', 'X'}, {'O', 'O', 'X', 'O'}};
         assertEquals("The game is draw!", test.getResult(moves),
                                             "Test with a draw game.");
+        moves = new char[][]{{'X', '_', '_', 'O'}, {'_', 'X', 'O', '_'}, {'_', 'O', 'X', '_'}, {'O', '_', '_', 'X'}};
+        assertEquals("This is impossible!", test.getResult(moves),
+                "Test with an impossible game (both players win diagonally).");
 
         // Board of size 5.
         moves = new char[][]{{'X', 'X', 'X', 'X', 'X'}, {'O', '_', 'O', 'O', 'O'},
                 {'X', '_', 'X', 'X', 'X'}, {'O', 'O', 'O', 'O', '_'}, {'_', 'O', 'X', 'O', 'X'}};
         assertEquals("Player X wins, congratulations!", test.getResult(moves),
                 "Test with player X wins the game.");
+        moves = new char[][]{{'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',},
+                {'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',}};
+        assertEquals("This is impossible!", test.getResult(moves),
+                "Test with an impossible game (both players win vertically).");
+    }
+
+    @Test
+    void testCheckIfDone() {
+        TicTacToe test = new TicTacToe();
+
+        // Board of size 3.
+        char[][] moves = {{'X', '_', 'X'}, {'X', 'O', 'O'}, {'_', 'O', 'O'}};
+        assertFalse(test.checkIfDone(moves), "Test with an unfinished board of size 3.");
+        moves = new char[][]{{'X', 'O', 'X'}, {'X', 'O', 'O'}, {'X', 'O', 'O'}};
+        assertTrue(test.checkIfDone(moves), "Test with a finished board of size 3.");
+
+        // Board of size 4.
+        moves = new char[][]{{'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O'}, {'O', '_', 'O', 'O'}};
+        assertFalse(test.checkIfDone(moves), "Test with an unfinished board of size 4.");
+        moves = new char[][]{{'X', 'O', 'X', 'O'}, {'O', 'X', 'O', 'X'}, {'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}};
+        assertTrue(test.checkIfDone(moves), "Test with a finished board of size 4.");
     }
 }
