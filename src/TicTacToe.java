@@ -59,6 +59,81 @@ public class TicTacToe {
     }
 
     /****************************************************************************************************
+     *   getResult(char[][] movesArray) {
+     *   Purpose: Display the result of the tic tac toe game to the console.
+     *   Pre-conditions:
+     *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
+     *   Post-conditions: Display the result of the tic tac toe game to the console.
+     *   Return: A string represent the result of the game.
+     *****************************************************************************************************/
+    public String getResult(char[][] movesArray) {
+        int numX = 0, numO = 0, num_ = 0; // Number of X, O and _ on the board.
+        String compareX = "X".repeat(movesArray.length), compareO = "O".repeat(movesArray.length); // Strings used to
+        // check for winner.
+        boolean winX = false, winO = false; // True if either of them win the game.
+
+        // Check horizontally for a win and count the number of X and O in the process.
+        for (char[] row : movesArray) {
+            StringBuilder movesInRow = new StringBuilder(); // A set of moves in a row to check for the winner.
+            for (char currChar : row) {  // Check each character in the row.
+                movesInRow.append(currChar);
+                if (currChar == 'X') { // Increase numX, numO or num_ if currChar is X, O or _ respectively.
+                    numX++;
+                } else if (currChar == 'O') {
+                    numO++;
+                } else {
+                    num_++;
+                }
+            }
+            if (movesInRow.toString().equals(compareX)) { // If movesInRow has a set of X then X wins, same with O.
+                winX = true;
+            } else if (movesInRow.toString().equals(compareO)) {
+                winO = true;
+            }
+        }
+
+        // Check vertically for a win and count the number of X and O in the process.
+        for (char[] row : movesArray) {
+            StringBuilder movesInRow = new StringBuilder(); // A set of moves in a row to check for the winner.
+            for (char currChar : row) {  // Check each character in the row.
+                movesInRow.append(currChar);
+            }
+            if (movesInRow.toString().equals(compareX)) { // If movesInRow has a set of X then X wins, same with O.
+                winX = true;
+            } else if (movesInRow.toString().equals(compareO)) {
+                winO = true;
+            }
+        }
+
+        // Check diagonally for a win and count the number of X and O in the process.
+        StringBuilder leftDiagonal = new StringBuilder();
+        StringBuilder rightDiagonal = new StringBuilder();
+        int DiagonalIdx = 0; // Index of the diagonal positions.
+        for (char[] row : movesArray) { // Get the moves at the diagonal positions.
+            leftDiagonal.append(row[DiagonalIdx]);
+            rightDiagonal.append(row[movesArray.length - 1 - DiagonalIdx]);
+            DiagonalIdx++;
+        }
+        if (leftDiagonal.toString().equals(compareO) || rightDiagonal.toString().equals(compareO)) {
+            winO = true;         // Check if either X or O occupies the diagonal positions in a row.
+        } else if (leftDiagonal.toString().equals(compareX) || rightDiagonal.toString().equals(compareX)) {
+            winX = true;
+        }
+
+        // Display the result.
+        if (!winO && !winX && num_ > 0) { // When no side has a three in a row but the field has empty cells;
+            return "The game has not finished!";
+        } else if (!winO && !winX && num_ == 0) { // When no side has a three in a row and the field has no empty cells;
+            return "The game is draw!";
+        } else if ((winO && winX) || (numX - numO >= 2 || numO - numX >= 2)) { // 3 X and 3 O in a row at the same time
+            return "This is impossible!";                // or there are 2 or more X than O and vice versa.
+        } else if (winO) { // When O wins.
+            return "Player O wins, congratulations!";
+        } else {  // When X wins.
+            return "Player X wins, congratulations!";
+        }
+    }
+    /****************************************************************************************************
     *   main(String[] args)
     *   Purpose: display a tic tac toe game to the console using users' inputs, and determine the result.
     *   Pre-conditions:
@@ -77,6 +152,8 @@ public class TicTacToe {
 
         // Display the tictactoe game.
         TicTacToe game = new TicTacToe();
-        game.drawBoard(game.toArray(userInput, boardSize));
+        char[][] arrayOfMoves = game.toArray(userInput, boardSize);
+        game.drawBoard(arrayOfMoves);
+        System.out.println(game.getResult(arrayOfMoves));
     }
 }
