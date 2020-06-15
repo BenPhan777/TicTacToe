@@ -59,6 +59,25 @@ public class TicTacToe {
     }
 
     /****************************************************************************************************
+     *   checkIfDone(char[][] movesArray) {
+     *   Purpose: Check if the board game is fully filled with players' moves.
+     *   Pre-conditions:
+     *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
+     *   Post-conditions: None.
+     *   Return: True if the board is full (no underscore), False otherwise.
+     *****************************************************************************************************/
+    public boolean checkIfDone(char[][] movesArray) {
+        for (char[] row: movesArray) {
+            for (char move: row) {
+                if (move == '_') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /****************************************************************************************************
      *   getResult(char[][] movesArray) {
      *   Purpose: Display the result of the tic tac toe game to the console.
      *   Pre-conditions:
@@ -143,18 +162,25 @@ public class TicTacToe {
     *   Return: None.
     *****************************************************************************************************/
     public static void main(String[] args) {
-        // Ask for the user's input.
+        // Ask for the size of the board game.
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the size of the board game here: ");
-        int boardSize = scanner.nextInt();
-        System.out.print("Enter your move here: ");
-        String userInput = scanner.next();    // The input needed to draw the game board.
-        scanner.close();
+        boolean isInt = scanner.hasNextInt();
+            while (!isInt) {  // ask for input again if the previous one was not an integer.
+              scanner.next();
+              System.out.print("Enter the size of the board game here (integer only): ");
+              isInt = scanner.hasNextInt();
+            }
+        int boardSize = scanner.nextInt(); // the valid size of the board to pass to other methods.
+        scanner.reset();
+//        System.out.print("Enter your move here: ");
+//        String userInput = scanner.next();    // The input needed to draw the game board.
 
         // Display the tictactoe game.
         TicTacToe game = new TicTacToe();
-        char[][] arrayOfMoves = game.toArray(userInput, boardSize);
+        char[][] arrayOfMoves = game.toArray("_".repeat(boardSize * boardSize), boardSize);
         game.drawBoard(arrayOfMoves);
         System.out.println(game.getResult(arrayOfMoves));
+        scanner.close();
     }
 }

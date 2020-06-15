@@ -76,4 +76,21 @@ class TicTacToeTest {
         assertEquals("This is impossible!", test.getResult(moves),
                 "Test with an impossible game (both players win vertically).");
     }
+
+    @Test
+    void testCheckIfDone() {
+        TicTacToe test = new TicTacToe();
+
+        // Board of size 3.
+        char[][] moves = {{'X', '_', 'X'}, {'X', 'O', 'O'}, {'_', 'O', 'O'}};
+        assertFalse(test.checkIfDone(moves), "Test with an unfinished board of size 3.");
+        moves = new char[][]{{'X', 'O', 'X'}, {'X', 'O', 'O'}, {'X', 'O', 'O'}};
+        assertTrue(test.checkIfDone(moves), "Test with a finished board of size 3.");
+
+        // Board of size 4.
+        moves = new char[][]{{'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O'}, {'O', '_', 'O', 'O'}};
+        assertFalse(test.checkIfDone(moves), "Test with an unfinished board of size 4.");
+        moves = new char[][]{{'X', 'O', 'X', 'O'}, {'O', 'X', 'O', 'X'}, {'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}};
+        assertTrue(test.checkIfDone(moves), "Test with a finished board of size 4.");
+    }
 }
