@@ -7,6 +7,48 @@ import java.util.Scanner;
 ******************************************************************************/
 
 public class TicTacToe {
+    /****************************************************************************************************
+     *   getSize()
+     *   Purpose: Get the size of the tictactoe board from the user.
+     *   Pre-conditions: None.
+     *   Post-conditions: Asking the user for the board size on the console.
+     *   Return: The size of the board game (integer).
+     *****************************************************************************************************/
+    private int getSize() {
+        // Ask for the size of the board game.
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the size of the board game here: ");
+        boolean isInt = scanner.hasNextInt();
+        while (!isInt) {  // Ask for input again if the previous one was not an integer.
+            scanner.next();
+            System.out.print("Enter the size of the board game here (integer only): ");
+            isInt = scanner.hasNextInt();
+        }
+        int sizeOfBoard = scanner.nextInt(); // The valid size of the board to pass to other methods.
+        scanner.close();
+        return sizeOfBoard;
+    }
+
+    /****************************************************************************************************
+     *   getXorO()
+     *   Purpose: Give the user the option to choose between X or O to start with and return their choice.
+     *   Pre-conditions: None.
+     *   Post-conditions: Ask the user to choose between X or O.
+     *   Return: True if X is chosen; false otherwise.
+     *****************************************************************************************************/
+    private boolean getXorO() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Do you want to be X or O? Enter your choice here: ");
+        String xo = scanner.next();
+        while (!("X".equals(xo) || "O".equals(xo))) {  // Ask for input again if the previous one was neither X or O.
+            scanner.next();
+            System.out.print("Must be X or O only. Enter your choice again here: ");
+            xo = scanner.next().toUpperCase();
+        }
+        scanner.close();
+        return "X".equals(xo);
+    }
+
     /***************************************************************************************************************
      *   toArray(String input, int size)
      *   Purpose: Take a given string input and return a 2-dimensional array filled with the content of that string.
@@ -32,7 +74,7 @@ public class TicTacToe {
     }
 
     /****************************************************************************************************
-     *   drawBoard(char[][] movesArray) {
+     *   drawBoard(char[][] movesArray)
      *   Purpose: Display a tic tac toe game to the console.
      *   Pre-conditions:
      *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
@@ -59,7 +101,7 @@ public class TicTacToe {
     }
 
     /****************************************************************************************************
-     *   checkIfDone(char[][] movesArray) {
+     *   checkIfDone(char[][] movesArray)
      *   Purpose: Check if the board game is fully filled with players' moves.
      *   Pre-conditions:
      *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
@@ -78,7 +120,46 @@ public class TicTacToe {
     }
 
     /****************************************************************************************************
-     *   getResult(char[][] movesArray) {
+     *   startGame(char[][] movesArray, int sizeOfBoard, TicTacToe theGame)
+     *   Purpose: Start the tictactoe game by filling the blank spot on the board as the users providing inputs.
+     *   Pre-conditions:
+     *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
+     *       @param sizeOfBoard: The size of the board game (integer).
+     *       @param theGame: the TicTacToe object to call methods on.
+     *   Post-conditions: Display the game and modify movesArray based on user's inputs as the game goes on.
+     *   Return: None.
+     *****************************************************************************************************/
+    public void startGame(char[][] movesArray, int sizeOfBoard, TicTacToe theGame) {
+        Scanner scanner = new Scanner(System.in);
+        boolean xTurn = theGame.getXorO(); // Who goes first (X or O)?
+        int x, y;          // The coordinate on the board.
+        System.out.print("Enter the coordinate of your move here: ");
+        boolean isXInt = scanner.hasNextInt();
+        boolean isYInt = scanner.hasNextInt();
+        while (!theGame.checkIfDone(movesArray)) { // Only stop asking for input when the game is done.
+            do {
+                while (!isXInt && !isYInt) {  // Ask for input again if the previous one was not an integer.
+                    scanner.nextLine();
+                    System.out.print("Please enter the coordinate of your move again (integer only): ");
+                    isXInt = scanner.hasNextInt();
+                    isYInt = scanner.hasNextInt();
+                }
+                x = scanner.nextInt();
+                y = scanner.nextInt();
+            } while (y > 0 && y <= sizeOfBoard && x > 0 && x <= sizeOfBoard);// Check that the coordinate is in valid range.
+
+            if (xTurn) {  // Fill in X if it's X's turn, same with O.
+                movesArray[y][x] = 'X';
+            } else {
+                movesArray[y][x] = 'O';
+            }
+            xTurn = !xTurn; // Not X's turn, meaning O's turn.
+        }
+        scanner.close();
+    }
+
+    /****************************************************************************************************
+     *   getResult(char[][] movesArray)
      *   Purpose: Display the result of the tic tac toe game to the console.
      *   Pre-conditions:
      *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
@@ -155,32 +236,21 @@ public class TicTacToe {
     }
     /****************************************************************************************************
     *   main(String[] args)
-    *   Purpose: display a tic tac toe game to the console using users' inputs, and determine the result.
+    *   Purpose: Display a tic tac toe game to the console using users' inputs, and determine the result.
     *   Pre-conditions:
-    *       @param args: an array of string arguments, empty in this case.
-    *   Post-conditions: display a tic tac toe game to the console and its result.
+    *       @param args: An array of string arguments, empty in this case.
+    *   Post-conditions: Display a tic tac toe game to the console and its result.
     *   Return: None.
     *****************************************************************************************************/
     public static void main(String[] args) {
-        // Ask for the size of the board game.
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the size of the board game here: ");
-        boolean isInt = scanner.hasNextInt();
-            while (!isInt) {  // ask for input again if the previous one was not an integer.
-              scanner.next();
-              System.out.print("Enter the size of the board game here (integer only): ");
-              isInt = scanner.hasNextInt();
-            }
-        int boardSize = scanner.nextInt(); // the valid size of the board to pass to other methods.
-        scanner.reset();
-//        System.out.print("Enter your move here: ");
-//        String userInput = scanner.next();    // The input needed to draw the game board.
+        TicTacToe game = new TicTacToe();
+        int boardSize = game.getSize(); // Board game size.
 
         // Display the tictactoe game.
-        TicTacToe game = new TicTacToe();
         char[][] arrayOfMoves = game.toArray("_".repeat(boardSize * boardSize), boardSize);
         game.drawBoard(arrayOfMoves);
+        game.startGame(arrayOfMoves, boardSize, game);
+
         System.out.println(game.getResult(arrayOfMoves));
-        scanner.close();
     }
 }
