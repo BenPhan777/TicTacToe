@@ -56,7 +56,7 @@ class TicTacToeTest {
                                              "Test with an impossible game (too many X).");
 
         // Board of size 4.
-        moves = new char[][]{{'X', '_', 'X', 'X'}, {'O', '_', 'O', 'O'}, {'X', 'X', '_', 'X'}, {'O', 'O', 'O', 'O'}};
+        moves = new char[][]{{'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O'}, {'O', '_', 'O', 'O'}};
         assertEquals("Player O wins, congratulations!", test.getResult(moves),
                                             "Test with player O wins the game.");
         moves = new char[][]{{'X', 'O', 'X', 'X'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'O', 'X'}, {'O', 'O', 'X', 'O'}};
