@@ -2,13 +2,13 @@ import java.util.Scanner;
 /*****************************************************************************
 *   Name: Ben Phan.
 *   Project Name: Tic Tac Toe.
-*   Date of Last Modification: June 14, 2020.
+*   Date of Last Modification: June 15, 2020.
 *   Purpose: Display and allow users to play Tic Tac Toe through the console.
 ******************************************************************************/
 
 public class TicTacToe {
     /***************************************************************************************************************
-     *   toArray(String input)
+     *   toArray(String input, int size)
      *   Purpose: Take a given string input and return a 2-dimensional array filled with the content of that string.
      *   Pre-conditions:
      *       @param input: A string representing user's moves.
@@ -116,7 +116,8 @@ public class TicTacToe {
         }
         if (leftDiagonal.toString().equals(compareO) || rightDiagonal.toString().equals(compareO)) {
             winO = true;         // Check if either X or O occupies the diagonal positions in a row.
-        } else if (leftDiagonal.toString().equals(compareX) || rightDiagonal.toString().equals(compareX)) {
+        }
+        if (leftDiagonal.toString().equals(compareX) || rightDiagonal.toString().equals(compareX)) {
             winX = true;
         }
 
