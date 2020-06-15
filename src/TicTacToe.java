@@ -93,10 +93,10 @@ public class TicTacToe {
         }
 
         // Check vertically for a win and count the number of X and O in the process.
-        for (char[] row : movesArray) {
+        for (int i = 0; i < movesArray.length; i++) {
             StringBuilder movesInRow = new StringBuilder(); // A set of moves in a row to check for the winner.
-            for (char currChar : row) {  // Check each character in the row.
-                movesInRow.append(currChar);
+            for (char[] row : movesArray) {
+                movesInRow.append(row[i]);
             }
             if (movesInRow.toString().equals(compareX)) { // If movesInRow has a set of X then X wins, same with O.
                 winX = true;
@@ -121,12 +121,12 @@ public class TicTacToe {
         }
 
         // Display the result.
-        if (!winO && !winX && num_ > 0) { // When no side has a three in a row but the field has empty cells;
+        if ((winO && winX) || (numX - numO >= 2 || numO - numX >= 2)) { // 3 X and 3 O in a row at the same time
+            return "This is impossible!";                // or there are 2 or more X than O and vice versa.
+        } else if (!winO && !winX && num_ > 0) { // When no side has a three in a row but the field has empty cells;
             return "The game has not finished!";
         } else if (!winO && !winX && num_ == 0) { // When no side has a three in a row and the field has no empty cells;
             return "The game is draw!";
-        } else if ((winO && winX) || (numX - numO >= 2 || numO - numX >= 2)) { // 3 X and 3 O in a row at the same time
-            return "This is impossible!";                // or there are 2 or more X than O and vice versa.
         } else if (winO) { // When O wins.
             return "Player O wins, congratulations!";
         } else {  // When X wins.
