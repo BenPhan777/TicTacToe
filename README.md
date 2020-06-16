@@ -30,15 +30,15 @@ after "here: " and enter a board size from your keyboard.
 For example: > Enter the size of the board game here: 5
 2. And you can keep doing that for any other texts that appear after you hit enter.
 3. As for how to play the game, depending on which size of board you chose, an empty board of that size will appear. 
-![](before.png)
+![](Imgs/before.png)
 4. There will also be a text asking you to enter the coordinate. To enter the right coordinate, first, you need to understand
 the coordinate of this board game. Start at the bottom left, that coordinate will be (1, 1). The first number represents x, and the second number represents y. So if you want to go right by 1, you need to enter (2, 1). Here is an example coordinate of a 3x3 board game. Note that the coordinate will increase as the board size increases.
-![](coordinate.png)
+![](Imgs/coordinate.png)
 5. To enter the coordinate, you need to type the x-coordinate follows by a space and the y-coordinate. 
 For example, this is how I enter my (1, 1) coordinate after the text:
                 > Enter the coordinate of your move here (example: 2 3): 1 1
 6. If you followed my instruction correctly, a new board should appear with your move on it like this:
-![](after.png)
+![](Imgs/after.png)
 7. The game will continue until someone wins or if there is a draw. Once that happens, there should be a text asking you if you
 want to play again. Simply enter y if you want to continue or n if you want to stop. 
 8. Voila! You should be able to play the game now with your friends.
