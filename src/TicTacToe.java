@@ -25,7 +25,7 @@ public class TicTacToe {
             isInt = scanner.hasNextInt();
         }
         int sizeOfBoard = scanner.nextInt(); // The valid size of the board to pass to other methods.
-        scanner.close();
+        scanner.reset();
         return sizeOfBoard;
     }
 
@@ -39,13 +39,13 @@ public class TicTacToe {
     private boolean getXorO() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Do you want to be X or O? Enter your choice here: ");
-        String xo = scanner.next();
+        String xo = scanner.next().toUpperCase();
         while (!("X".equals(xo) || "O".equals(xo))) {  // Ask for input again if the previous one was neither X or O.
             scanner.next();
             System.out.print("Must be X or O only. Enter your choice again here: ");
             xo = scanner.next().toUpperCase();
         }
-        scanner.close();
+        scanner.reset();
         return "X".equals(xo);
     }
 
@@ -132,13 +132,14 @@ public class TicTacToe {
     public void startGame(char[][] movesArray, int sizeOfBoard, TicTacToe theGame) {
         Scanner scanner = new Scanner(System.in);
         boolean xTurn = theGame.getXorO(); // Who goes first (X or O)?
-        int x, y;          // The coordinate on the board.
-        System.out.print("Enter the coordinate of your move here: ");
-        boolean isXInt = scanner.hasNextInt();
-        boolean isYInt = scanner.hasNextInt();
+        int x, y;      // The coordinate on the board.
         while (!theGame.checkIfDone(movesArray)) { // Only stop asking for input when the game is done.
+            int i = 0;  // prompt the user that their input is in wrong range if the while-loop repeats more than once.
             do {
-                while (!isXInt && !isYInt) {  // Ask for input again if the previous one was not an integer.
+                System.out.print("Enter the coordinate of your move here: ");
+                boolean isXInt = scanner.hasNextInt();
+                boolean isYInt = scanner.hasNextInt();
+                while (!(isXInt && isYInt)) {  // Ask for input again if the previous one was not an integer.
                     scanner.nextLine();
                     System.out.print("Please enter the coordinate of your move again (integer only): ");
                     isXInt = scanner.hasNextInt();
@@ -146,16 +147,24 @@ public class TicTacToe {
                 }
                 x = scanner.nextInt();
                 y = scanner.nextInt();
-            } while (y > 0 && y <= sizeOfBoard && x > 0 && x <= sizeOfBoard);// Check that the coordinate is in valid range.
-
-            if (xTurn) {  // Fill in X if it's X's turn, same with O.
-                movesArray[y][x] = 'X';
+                if (i > 0) {
+                    System.out.println("Please only enter number in range " + 1 + " " + sizeOfBoard);
+                }
+                i++;
+            } while (!(y > 0 && y <= sizeOfBoard && x > 0 && x <= sizeOfBoard)); // Check that the coordinate
+                                                                                 // is in valid range.
+            if (movesArray[Math.abs(y - sizeOfBoard)][x - 1] != '_') {
+                System.out.println("This spot is already occupied. Please choose another spot!");
+            } else if (xTurn) {  // Fill in X if it's X's turn, same with O.
+                movesArray[Math.abs(y - sizeOfBoard)][x - 1] = 'X';
+                xTurn = false; // Not X's turn, meaning O's turn.
             } else {
-                movesArray[y][x] = 'O';
+                movesArray[Math.abs(y - sizeOfBoard)][x - 1] = 'O';
+                xTurn = true; // Not X's turn, meaning O's turn.
             }
-            xTurn = !xTurn; // Not X's turn, meaning O's turn.
+            drawBoard(movesArray); // Update the board after the player just made their move.
         }
-        scanner.close();
+        scanner.reset();
     }
 
     /****************************************************************************************************
