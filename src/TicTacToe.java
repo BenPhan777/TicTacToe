@@ -41,7 +41,6 @@ public class TicTacToe {
         System.out.print("Do you want to be X or O? Enter your choice here: ");
         String xo = scanner.next().toUpperCase();
         while (!("X".equals(xo) || "O".equals(xo))) {  // Ask for input again if the previous one was neither X or O.
-            scanner.next();
             System.out.print("Must be X or O only. Enter your choice again here: ");
             xo = scanner.next().toUpperCase();
         }
@@ -127,16 +126,16 @@ public class TicTacToe {
      *       @param sizeOfBoard: The size of the board game (integer).
      *       @param theGame: the TicTacToe object to call methods on.
      *   Post-conditions: Display the game and modify movesArray based on user's inputs as the game goes on.
-     *   Return: None.
+     *   Return: A character represent the result of the game.
      *****************************************************************************************************/
-    public void startGame(char[][] movesArray, int sizeOfBoard, TicTacToe theGame) {
+    public char startGame(char[][] movesArray, int sizeOfBoard, TicTacToe theGame) {
         Scanner scanner = new Scanner(System.in);
         boolean xTurn = theGame.getXorO(); // Who goes first (X or O)?
         int x, y;      // The coordinate on the board.
+        char result = 'n';   // result to stop the game if either O or X wins.
         while (!theGame.checkIfDone(movesArray)) { // Only stop asking for input when the game is done.
-            int i = 0;  // prompt the user that their input is in wrong range if the while-loop repeats more than once.
             do {
-                System.out.print("Enter the coordinate of your move here: ");
+                System.out.print("Enter the coordinate of your move here (example: 2 3): ");
                 boolean isXInt = scanner.hasNextInt();
                 boolean isYInt = scanner.hasNextInt();
                 while (!(isXInt && isYInt)) {  // Ask for input again if the previous one was not an integer.
@@ -147,24 +146,29 @@ public class TicTacToe {
                 }
                 x = scanner.nextInt();
                 y = scanner.nextInt();
-                if (i > 0) {
-                    System.out.println("Please only enter number in range " + 1 + " " + sizeOfBoard);
+                // prompt the user that their input is in wrong range if the while-loop repeats more than once.
+                if (!(y > 0 && y <= sizeOfBoard && x > 0 && x <= sizeOfBoard)) {
+                    System.out.println("Please only enter number in range " + 1 + "-" + sizeOfBoard);
                 }
-                i++;
             } while (!(y > 0 && y <= sizeOfBoard && x > 0 && x <= sizeOfBoard)); // Check that the coordinate
                                                                                  // is in valid range.
             if (movesArray[Math.abs(y - sizeOfBoard)][x - 1] != '_') {
                 System.out.println("This spot is already occupied. Please choose another spot!");
-            } else if (xTurn) {  // Fill in X if it's X's turn, same with O.
+            } else if (xTurn) {       // Fill in X if it's X's turn, same with O.
                 movesArray[Math.abs(y - sizeOfBoard)][x - 1] = 'X';
-                xTurn = false; // Not X's turn, meaning O's turn.
+                xTurn = false;        // Not X's turn, meaning O's turn.
             } else {
                 movesArray[Math.abs(y - sizeOfBoard)][x - 1] = 'O';
-                xTurn = true; // Not X's turn, meaning O's turn.
+                xTurn = true;         // Not X's turn, meaning O's turn.
             }
-            drawBoard(movesArray); // Update the board after the player just made their move.
+            drawBoard(movesArray);    // Update the board after the player just made their move.
+            result = theGame.getResult(movesArray);
+            if (result == 'O' || result == 'X') {
+                break;
+            }
         }
         scanner.reset();
+        return result;
     }
 
     /****************************************************************************************************
@@ -173,31 +177,21 @@ public class TicTacToe {
      *   Pre-conditions:
      *       @param movesArray: A 2-dimensional array containing positions of X, O or underscore.
      *   Post-conditions: Display the result of the tic tac toe game to the console.
-     *   Return: A string represent the result of the game.
+     *   Return: A character represent the result of the game.
      *****************************************************************************************************/
-    public String getResult(char[][] movesArray) {
-        int numX = 0, numO = 0, num_ = 0; // Number of X, O and _ on the board.
+    public char getResult(char[][] movesArray) {
         String compareX = "X".repeat(movesArray.length), compareO = "O".repeat(movesArray.length); // Strings used to
-        // check for winner.
-        boolean winX = false, winO = false; // True if either of them win the game.
-
+                                                                                                   // check for winner.
         // Check horizontally for a win and count the number of X and O in the process.
         for (char[] row : movesArray) {
             StringBuilder movesInRow = new StringBuilder(); // A set of moves in a row to check for the winner.
             for (char currChar : row) {  // Check each character in the row.
                 movesInRow.append(currChar);
-                if (currChar == 'X') { // Increase numX, numO or num_ if currChar is X, O or _ respectively.
-                    numX++;
-                } else if (currChar == 'O') {
-                    numO++;
-                } else {
-                    num_++;
-                }
             }
             if (movesInRow.toString().equals(compareX)) { // If movesInRow has a set of X then X wins, same with O.
-                winX = true;
+                return 'X'; // When X wins.
             } else if (movesInRow.toString().equals(compareO)) {
-                winO = true;
+                return 'O'; // When O wins.
             }
         }
 
@@ -208,9 +202,9 @@ public class TicTacToe {
                 movesInRow.append(row[i]);
             }
             if (movesInRow.toString().equals(compareX)) { // If movesInRow has a set of X then X wins, same with O.
-                winX = true;
+                return 'X';
             } else if (movesInRow.toString().equals(compareO)) {
-                winO = true;
+                return 'O';
             }
         }
 
@@ -222,27 +216,18 @@ public class TicTacToe {
             leftDiagonal.append(row[DiagonalIdx]);
             rightDiagonal.append(row[movesArray.length - 1 - DiagonalIdx]);
             DiagonalIdx++;
-        }
+        }                                          // Check if either X or O occupies the diagonal positions in a row.
         if (leftDiagonal.toString().equals(compareO) || rightDiagonal.toString().equals(compareO)) {
-            winO = true;         // Check if either X or O occupies the diagonal positions in a row.
+            return 'O';
         }
         if (leftDiagonal.toString().equals(compareX) || rightDiagonal.toString().equals(compareX)) {
-            winX = true;
+            return 'X';
         }
 
         // Display the result.
-        if ((winO && winX) || (numX - numO >= 2 || numO - numX >= 2)) { // 3 X and 3 O in a row at the same time
-            return "This is impossible!";                // or there are 2 or more X than O and vice versa.
-        } else if (!winO && !winX && num_ > 0) { // When no side has a three in a row but the field has empty cells;
-            return "The game has not finished!";
-        } else if (!winO && !winX && num_ == 0) { // When no side has a three in a row and the field has no empty cells;
-            return "The game is draw!";
-        } else if (winO) { // When O wins.
-            return "Player O wins, congratulations!";
-        } else {  // When X wins.
-            return "Player X wins, congratulations!";
-        }
+        return 'D';
     }
+
     /****************************************************************************************************
     *   main(String[] args)
     *   Purpose: Display a tic tac toe game to the console using users' inputs, and determine the result.
@@ -252,14 +237,25 @@ public class TicTacToe {
     *   Return: None.
     *****************************************************************************************************/
     public static void main(String[] args) {
-        TicTacToe game = new TicTacToe();
-        int boardSize = game.getSize(); // Board game size.
+        TicTacToe game = new TicTacToe(); // Initialize the game.
+        int boardSize = game.getSize(); // Get the size of the board game for other methods.
 
         // Display the tictactoe game.
-        char[][] arrayOfMoves = game.toArray("_".repeat(boardSize * boardSize), boardSize);
-        game.drawBoard(arrayOfMoves);
-        game.startGame(arrayOfMoves, boardSize, game);
+        char[][] arrayOfMoves = game.toArray("_".repeat(boardSize * boardSize), boardSize); // Set up an empty board.
+        game.drawBoard(arrayOfMoves);     // Display the empty board game.
+        char gameResult = game.startGame(arrayOfMoves, boardSize, game); // Run the game and get the result.
 
-        System.out.println(game.getResult(arrayOfMoves));
+        // Display the result of the game.
+        Scanner scanner = new Scanner(System.in);
+        if (gameResult == 'O') {
+            System.out.print("Player O win the game. Congratulations! Try again? Enter y/n here: ");
+        } else if (gameResult == 'X') {
+            System.out.print("Player X win the game. Congratulations! Try again? Enter y/n here: ");
+        } else {
+            System.out.print("The game is draw! Try again? Enter y/n here: ");
+        }
+        if ("y".equals(scanner.next())) {    // Restart the game.
+            main(new String[] {});
+        }
     }
 }

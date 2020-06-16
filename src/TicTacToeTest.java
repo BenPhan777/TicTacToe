@@ -45,36 +45,29 @@ class TicTacToeTest {
         TicTacToe test = new TicTacToe();
 
         // Board of size 3.
-        char[][] moves = {{'X', '_', 'X'}, {'X', 'O', 'O'}, {'_', 'O', 'O'}};
-        assertEquals("The game has not finished!" , test.getResult(moves),
-                                             "Test with an unfinished game.");
-        moves = new char[][]{{'X', 'X', 'X'}, {'O', 'O', 'O'}, {'_', 'X', 'O'}};
-        assertEquals("This is impossible!" , test.getResult(moves),
-                                             "Test with an impossible game (both players win horizontally).");
-        moves = new char[][]{{'X', 'X', 'X'}, {'O', 'X', 'O'}, {'_', 'X', 'O'}};
-        assertEquals("This is impossible!" , test.getResult(moves),
-                                             "Test with an impossible game (too many X).");
+        char[][] moves = {{'X', 'O', 'O'}, {'X', '_', 'X'}, {'X', 'O', 'O'}};
+        assertEquals('X' , test.getResult(moves),
+                            "Test with X as winner (board size 3) (vertical win).");
+        moves = new char[][]{{'X', 'X', 'X'}, {'O', '_', 'O'}, {'_', 'X', 'O'}};
+        assertEquals('X' , test.getResult(moves),
+                            "Test with X as winner (board size 3) (horizontal win)");
 
         // Board of size 4.
         moves = new char[][]{{'X', 'X', 'X', 'O'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O'}, {'O', '_', 'O', 'O'}};
-        assertEquals("Player O wins, congratulations!", test.getResult(moves),
-                                            "Test with player O wins the game.");
+        assertEquals('O', test.getResult(moves),
+                            "Test with O as winner (board size 4) (vertical win).");
         moves = new char[][]{{'X', 'O', 'X', 'X'}, {'O', 'X', 'O', 'O'}, {'X', 'X', 'O', 'X'}, {'O', 'O', 'X', 'O'}};
-        assertEquals("The game is draw!", test.getResult(moves),
-                                            "Test with a draw game.");
-        moves = new char[][]{{'X', '_', '_', 'O'}, {'_', 'X', 'O', '_'}, {'_', 'O', 'X', '_'}, {'O', '_', '_', 'X'}};
-        assertEquals("This is impossible!", test.getResult(moves),
-                "Test with an impossible game (both players win diagonally).");
+        assertEquals('D', test.getResult(moves),
+                            "Test with no one as winner (board size 4) (draw).");
+        moves = new char[][]{{'X', '_', '_', 'O'}, {'_', 'X', '_', '_'}, {'_', 'O', 'X', '_'}, {'O', '_', '_', 'X'}};
+        assertEquals('X', test.getResult(moves),
+                            "Test with X as winner (board size 4) (diagonal win).");
 
         // Board of size 5.
         moves = new char[][]{{'X', 'X', 'X', 'X', 'X'}, {'O', '_', 'O', 'O', 'O'},
                 {'X', '_', 'X', 'X', 'X'}, {'O', 'O', 'O', 'O', '_'}, {'_', 'O', 'X', 'O', 'X'}};
-        assertEquals("Player X wins, congratulations!", test.getResult(moves),
-                "Test with player X wins the game.");
-        moves = new char[][]{{'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',},
-                {'X', 'O', '_', '_', '_',}, {'X', 'O', '_', '_', '_',}};
-        assertEquals("This is impossible!", test.getResult(moves),
-                "Test with an impossible game (both players win vertically).");
+        assertEquals('X', test.getResult(moves),
+                            "Test with X as winner (board size 5) (horizontal win).");
     }
 
     @Test
